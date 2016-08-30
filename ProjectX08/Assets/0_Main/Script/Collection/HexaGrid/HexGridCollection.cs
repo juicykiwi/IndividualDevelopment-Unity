@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class HexGridCollectionEx
+public class HexGridCollection
 {
     public Dictionary<HexPos, HexGrid> _hexGridDict = null;
 
@@ -20,7 +20,7 @@ public class HexGridCollectionEx
         } 
     }
 
-    public HexGridCollectionEx(int width = 5, int height = 5)
+    public HexGridCollection(int width = 5, int height = 5)
     {
         Width = width;
         Height = height;

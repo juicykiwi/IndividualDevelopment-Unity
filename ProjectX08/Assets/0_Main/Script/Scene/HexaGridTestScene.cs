@@ -24,7 +24,7 @@ public class HexaGridTestScene : MonoBehaviour
 
         // Collection2
 
-        HexGridCollectionEx collection2 = new HexGridCollectionEx(5, 5);
+        HexGridCollection collection2 = new HexGridCollection(5, 5);
         IDictionaryEnumerator enumerator = collection2.Enumerator;
 
         while (enumerator.MoveNext() == true)
