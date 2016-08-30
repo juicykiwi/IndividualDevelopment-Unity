@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class HexaGridCollection<T>
+public class HexGridCollectionOld<T>
 {
+    const int TwoLine = 2;
+
     public int BaseWidth { get; private set; }
     public int BaseHeight { get; private set; }
 
@@ -16,7 +18,7 @@ public class HexaGridCollection<T>
         set { _list[index] = value; }
     }
 
-    public HexaGridCollection(int width, int height)
+    public HexGridCollectionOld(int width, int height)
     {
         BaseWidth = width;
         BaseHeight = height;
@@ -36,10 +38,10 @@ public class HexaGridCollection<T>
 
     int FullCapacityAtLine(int baseWidth, int line)
     {
-        return (baseWidth * line) - (line / 2);
+        return (baseWidth * line) - (line / TwoLine);
     }
 
-    public int IndexAtHexaGrid(HexaGrid grid)
+    public int IndexAtHexaGrid(HexGridOld grid)
     {
         if (IsValidHexaGrid(grid) == false)
             return -1;
@@ -47,40 +49,49 @@ public class HexaGridCollection<T>
         return FullCapacityAtLine(grid._row) + grid._column;
     }
 
+    int TwoLineCount()
+    {
+        return (BaseWidth * TwoLine - 1);
+    }
+
     public int Column(int index)
     {
-        return index % (BaseWidth * 2 - 1) % BaseWidth;
+        return index % TwoLineCount() % BaseWidth;
     }
 
     public int Row(int index)
     {
-        int expression = (BaseWidth * 2 - 1);
+        int TwoLineToOneLine = index / TwoLineCount() * 2;
+        int addRow = index % TwoLineCount() / BaseWidth;
 
-        int baseRow = index / expression * 2;
-        int addRow = index % expression / BaseWidth;
-
-        return baseRow + addRow;
+        return TwoLineToOneLine + addRow;
     }
 
-    public HexaGrid HexaGridAtIndex(int index)
+    public HexGridOld HexaGridAtIndex(int index)
     {
         if (IsValidIndex(index) == false)
-            return HexaGrid.InvalidHexaGrid;
+            return HexGridOld.InvalidHexaGrid;
         
-        HexaGrid grid = new HexaGrid();
+        HexGridOld grid = new HexGridOld();
         grid._column = Column(index);
         grid._row = Row(index);
 
         return grid;
     }
 
-    public bool IsValidHexaGrid(HexaGrid grid)
+    public bool IsValidHexaGrid(HexGridOld grid)
     {
-        if (grid._column < 0 || grid._column >= BaseWidth)
+        if (grid._column < 0 || grid._row < 0)
             return false;
-        
-        if (grid._row < 0 || grid._row >= BaseHeight)
+
+        if (grid._column >= BaseWidth || grid._row >= BaseHeight)
             return false;
+
+        if (grid._row % TwoLine == 1)
+        {
+            if (grid._column >= BaseWidth - 1)
+                return false;
+        }
 
         return true;
     }

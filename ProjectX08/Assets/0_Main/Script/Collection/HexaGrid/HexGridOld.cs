@@ -12,23 +12,23 @@ using System.Collections;
 /// <summary>
 /// Hexa grid. column and row start index is zero.
 /// </summary>
-public struct HexaGrid
+public struct HexGridOld
 {
     public int _column;
     public int _row;
 
-    public static HexaGrid InvalidHexaGrid
+    public static HexGridOld InvalidHexaGrid
     {
-        get { return new HexaGrid(-1, -1); }
+        get { return new HexGridOld(-1, -1); }
     }
 
-    public HexaGrid(HexaGrid grid)
+    public HexGridOld(HexGridOld grid)
     {
         _column = grid._column;
         _row = grid._row;
     }
 
-    public HexaGrid(int column, int row)
+    public HexGridOld(int column, int row)
     {
         _column = column;
         _row = row;
