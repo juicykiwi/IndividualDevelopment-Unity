@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class HexGridCollection
 {
-    public Dictionary<HexPos, HexGrid> _hexGridDict = null;
+    public Dictionary<HexGridPos, HexGridCell> _hexGridDict = null;
 
     public int Width { get; private set; }
     public int Height { get; private set; }
@@ -25,43 +25,51 @@ public class HexGridCollection
         Width = width;
         Height = height;
 
-        _hexGridDict = new Dictionary<HexPos, HexGrid>(GridMaxCount);
+        _hexGridDict = new Dictionary<HexGridPos, HexGridCell>(GridMaxCount);
 
-        for (int x = 0; x < width; ++x)
+        for (int x = 0; x <= width; ++x)
         {
             int startY = StartYAtX(x);
-            int maxY = CountHeightAtX(x) + startY;
+            int endY = EndYAtX(x);
 
-            for (int y = startY; y < maxY; ++y)
+            for (int y = startY; y <= endY; y += 2)
             {
-                HexGrid hexGrid = new HexGrid();
-                hexGrid.Pos = new HexPos(x, y);
+                HexGridCell hexGridCell = new HexGridCell();
+                hexGridCell.Pos = new HexGridPos(x, y);
 
-                _hexGridDict.Add(hexGrid.Pos, hexGrid);
+                _hexGridDict.Add(hexGridCell.Pos, hexGridCell);
             }
         }
     }
 
     public int CountHeightAtX(int x)
     {
-        return Height - (x % 2);
+        if (Height < 0)
+            return 0;
+
+        return ((Height - StartYAtX(x)) / 2) + 1;
     }
 
     public int StartYAtX(int x)
     {
-        return x - (x / 2);
+        return x % 2;
     }
 
-    public bool ContainsKey(HexPos hexPos)
+    public int EndYAtX(int x)
     {
-        return _hexGridDict.ContainsKey(hexPos);
+        return Height - StartYAtX(x);
     }
 
-    public HexGrid this[HexPos hexPos]
+    public bool ContainsKey(HexGridPos hexGridPos)
+    {
+        return _hexGridDict.ContainsKey(hexGridPos);
+    }
+
+    public HexGridCell this[HexGridPos hexGridPos]
     {
         get
         {
-            return _hexGridDict[hexPos];
+            return _hexGridDict[hexGridPos];
         }
     }
 }
